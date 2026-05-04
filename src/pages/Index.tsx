@@ -4,8 +4,7 @@ import { usePlantPotSubscription } from '@/hooks/usePlantPotSubscription';
 import { PlantPotList } from '@/components/PlantPotList';
 import { CreatePlantPotDialog } from '@/components/CreatePlantPotDialog';
 import { LoginArea } from '@/components/auth/LoginArea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Cpu, Shield, Radio, Activity, Server, Zap } from 'lucide-react';
+import { Cpu } from 'lucide-react';
 
 const Index = () => {
   const { user } = useCurrentUser();
@@ -20,26 +19,33 @@ const Index = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
-        {/* Hero Section */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center justify-center p-4 rounded-full bg-purple-100 dark:bg-purple-900 mb-6">
-              <Cpu className="h-12 w-12 text-purple-600 dark:text-purple-400" />
+      <div className="min-h-screen bg-white dark:bg-[#000000] flex items-center justify-center px-4">
+        <div className="w-full max-w-xl">
+          {/* Logo/Icon */}
+          <div className="flex justify-center mb-8">
+            <div className="h-20 w-20 rounded-[22px] bg-[#007AFF] dark:bg-[#0A84FF] flex items-center justify-center shadow-lg">
+              <Cpu className="h-11 w-11 text-white" strokeWidth={2} />
             </div>
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              NotPlatform
-            </h1>
-            <p className="text-xl text-muted-foreground mb-4">
-              Decentralized IoT device management built on Nostr
-            </p>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Give your IoT devices their own Nostr identities. No central servers, no vendor lock-in, 
-              no proprietary protocols. Just open standards and complete control.
-            </p>
-            <div className="flex justify-center">
-              <LoginArea className="max-w-60" />
-            </div>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-[56px] leading-[1.07] font-semibold tracking-tight text-center mb-3 text-[#1d1d1f] dark:text-[#f5f5f7]">
+            NotPlatform
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-[21px] leading-[1.381] font-normal text-center mb-2 text-[#1d1d1f] dark:text-[#f5f5f7]">
+            Decentralized IoT device management
+          </p>
+
+          {/* Description */}
+          <p className="text-[17px] leading-[1.47] font-normal text-center mb-10 text-[#86868b] dark:text-[#a1a1a6] max-w-lg mx-auto">
+            Built on Nostr protocol. Give your devices their own identities, manage relays, and query events in real-time.
+          </p>
+
+          {/* Login Area */}
+          <div className="flex justify-center">
+            <LoginArea className="w-full max-w-xs" />
           </div>
         </div>
       </div>
@@ -47,42 +53,39 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Cpu className="h-8 w-8 text-purple-600" />
-              <h1 className="text-3xl font-bold">My Devices</h1>
+    <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#000000]">
+      {/* Header Bar */}
+      <div className="bg-white/80 dark:bg-[#1d1d1f]/80 backdrop-blur-xl border-b border-[#d2d2d7] dark:border-[#424245] sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-[52px]">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-[#007AFF] dark:bg-[#0A84FF] flex items-center justify-center">
+                <Cpu className="h-4 w-4 text-white" strokeWidth={2.5} />
+              </div>
+              <h1 className="text-[19px] font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">
+                NotPlatform
+              </h1>
             </div>
-            <p className="text-muted-foreground">
-              Manage your IoT devices and monitor their activity
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <CreatePlantPotDialog />
-            <LoginArea className="max-w-60" />
+            <div className="flex items-center gap-3">
+              <CreatePlantPotDialog />
+              <LoginArea className="max-w-xs" />
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Device List */}
-        <PlantPotList />
-
-        {/* Footer */}
-        <div className="mt-16 text-center text-sm text-muted-foreground">
-          <p>
-            Vibed with{' '}
-            <a
-              href="https://shakespeare.diy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-purple-600 hover:underline"
-            >
-              Shakespeare
-            </a>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+        <div className="mb-8">
+          <h2 className="text-[32px] leading-[1.125] font-semibold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7] mb-2">
+            My Devices
+          </h2>
+          <p className="text-[17px] leading-[1.47] text-[#86868b] dark:text-[#a1a1a6]">
+            Manage your IoT devices and monitor their activity
           </p>
         </div>
+
+        <PlantPotList />
       </div>
     </div>
   );

@@ -27,37 +27,39 @@ function PlantPotCard({ pot, onDelete, deletingId }: { pot: any; onDelete: (e: R
   return (
     <div className="relative">
       <Link to={`/pot/${identifier}`}>
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
-          <CardHeader>
+        <Card className="border border-[#d2d2d7] dark:border-[#424245] bg-white dark:bg-[#1d1d1f] hover:shadow-xl hover:scale-[1.01] transition-all duration-200 cursor-pointer h-full">
+          <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sprout className="h-5 w-5 text-green-600" />
-                <CardTitle className="text-lg">{name}</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-[#007AFF]/10 dark:bg-[#0A84FF]/10 flex items-center justify-center">
+                  <Sprout className="h-5 w-5 text-[#007AFF] dark:text-[#0A84FF]" strokeWidth={2} />
+                </div>
+                <CardTitle className="text-[17px] font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">{name}</CardTitle>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={(e) => onDelete(e, pot)}
                 disabled={deletingId === pot.id}
-                className="text-destructive hover:text-destructive"
+                className="h-8 w-8 p-0 text-[#86868b] hover:text-[#ff3b30] dark:hover:text-[#ff453a] hover:bg-[#ff3b30]/10 dark:hover:bg-[#ff453a]/10"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
-            <CardDescription>
+            <CardDescription className="text-[13px] text-[#86868b] dark:text-[#a1a1a6] mt-1">
               {tasks.length > 0 ? `${tasks.length} pending task${tasks.length !== 1 ? 's' : ''}` : 'No pending tasks'}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-0">
             {/* Pending tasks */}
             {tasks.length > 0 && (
               <div className="space-y-2 mb-3">
                 {tasks.map((task, idx) => (
-                  <div key={idx} className="flex items-center justify-between">
-                    <Badge variant="secondary" className="capitalize">
+                  <div key={idx} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#f5f5f7] dark:bg-[#2c2c2e]">
+                    <span className="text-[13px] font-medium text-[#1d1d1f] dark:text-[#f5f5f7] capitalize">
                       {task.type}
-                    </Badge>
-                    <span className="text-sm text-muted-foreground">
+                    </span>
+                    <span className="text-[13px] text-[#86868b] dark:text-[#a1a1a6]">
                       {formatDuration(parseInt(task.seconds))}
                     </span>
                   </div>
@@ -68,21 +70,21 @@ function PlantPotCard({ pot, onDelete, deletingId }: { pot: any; onDelete: (e: R
             {/* Recent activity logs */}
             {recentLogs.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-muted-foreground mb-2">Recent Activity</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#86868b] dark:text-[#a1a1a6] mb-2">Recent Activity</p>
                 {recentLogs.map((log) => {
                   const logTasks = extractTasks(log);
                   return (
-                    <div key={log.id} className="flex items-center gap-2 text-xs">
-                      <CheckCheck className="h-3 w-3 text-green-600 flex-shrink-0" />
+                    <div key={log.id} className="flex items-center gap-2">
+                      <CheckCheck className="h-3.5 w-3.5 text-[#34c759] dark:text-[#30d158] flex-shrink-0" />
                       <div className="flex items-center justify-between flex-1 min-w-0">
-                        <div className="text-muted-foreground">
+                        <div className="text-[13px] text-[#1d1d1f] dark:text-[#f5f5f7]">
                           {logTasks.map((task, idx) => (
                             <span key={idx}>
                               <span className="capitalize">{task.type}</span> {formatDuration(parseInt(task.seconds))}
                             </span>
                           ))}
                         </div>
-                        <div className="text-muted-foreground/70 text-xs">
+                        <div className="text-[12px] text-[#86868b] dark:text-[#a1a1a6]">
                           {formatRelativeTime(log.created_at)}
                         </div>
                       </div>
@@ -93,23 +95,23 @@ function PlantPotCard({ pot, onDelete, deletingId }: { pot: any; onDelete: (e: R
             )}
 
             {tasks.length === 0 && recentLogs.length === 0 && !weatherReading && (
-              <p className="text-sm text-muted-foreground text-center py-4">
+              <p className="text-[13px] text-[#86868b] dark:text-[#a1a1a6] text-center py-6">
                 No activity yet
               </p>
             )}
 
             {/* Environment conditions */}
             {weatherReading && (
-              <div className={recentLogs.length > 0 ? 'pt-3 mt-2' : 'pt-3 border-t'}>
-                <p className="text-xs font-medium text-muted-foreground mb-2">Environment</p>
-                <div className="flex items-center gap-3 text-xs">
-                  <div className="flex items-center gap-1.5 text-orange-500/70 dark:text-orange-400/70">
-                    <Thermometer className="h-3.5 w-3.5" />
-                    <span className="font-medium">{getTemperature(weatherReading)}°C</span>
+              <div className={recentLogs.length > 0 ? 'pt-3 mt-3 border-t border-[#d2d2d7] dark:border-[#424245]' : 'pt-3'}>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#86868b] dark:text-[#a1a1a6] mb-2">Environment</p>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Thermometer className="h-4 w-4 text-[#ff9500] dark:text-[#ff9f0a]" />
+                    <span className="text-[13px] font-medium text-[#1d1d1f] dark:text-[#f5f5f7]">{getTemperature(weatherReading)}°C</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-blue-500/70 dark:text-blue-400/70">
-                    <Droplets className="h-3.5 w-3.5" />
-                    <span className="font-medium">{getHumidity(weatherReading)}%</span>
+                  <div className="flex items-center gap-2">
+                    <Droplets className="h-4 w-4 text-[#007AFF] dark:text-[#0A84FF]" />
+                    <span className="text-[13px] font-medium text-[#1d1d1f] dark:text-[#f5f5f7]">{getHumidity(weatherReading)}%</span>
                   </div>
                 </div>
               </div>
@@ -177,10 +179,12 @@ export function PlantPotList() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center space-y-3">
-          <Sprout className="h-8 w-8 mx-auto text-green-600 animate-pulse" />
-          <p className="text-sm text-muted-foreground">Loading plant pots...</p>
+      <div className="flex items-center justify-center py-20">
+        <div className="text-center space-y-4">
+          <div className="h-16 w-16 rounded-2xl bg-[#007AFF]/10 dark:bg-[#0A84FF]/10 flex items-center justify-center mx-auto">
+            <Sprout className="h-8 w-8 text-[#007AFF] dark:text-[#0A84FF] animate-pulse" strokeWidth={2} />
+          </div>
+          <p className="text-[15px] text-[#86868b] dark:text-[#a1a1a6]">Loading devices...</p>
         </div>
       </div>
     );
@@ -188,12 +192,17 @@ export function PlantPotList() {
 
   if (!plantPots || plantPots.length === 0) {
     return (
-      <Card className="border-dashed">
-        <CardContent className="py-12 px-8 text-center">
-          <div className="max-w-sm mx-auto space-y-4">
-            <Sprout className="h-12 w-12 mx-auto text-muted-foreground" />
-            <p className="text-muted-foreground">
-              No plant pots yet. Create your first plant pot to get started!
+      <Card className="border-2 border-dashed border-[#d2d2d7] dark:border-[#424245] bg-white/50 dark:bg-[#1d1d1f]/50">
+        <CardContent className="py-16 px-8 text-center">
+          <div className="max-w-md mx-auto space-y-4">
+            <div className="h-20 w-20 rounded-2xl bg-[#007AFF]/10 dark:bg-[#0A84FF]/10 flex items-center justify-center mx-auto">
+              <Sprout className="h-10 w-10 text-[#007AFF] dark:text-[#0A84FF]" strokeWidth={2} />
+            </div>
+            <p className="text-[17px] text-[#1d1d1f] dark:text-[#f5f5f7] font-medium">
+              No devices yet
+            </p>
+            <p className="text-[15px] text-[#86868b] dark:text-[#a1a1a6]">
+              Create your first device to get started with NotPlatform
             </p>
           </div>
         </CardContent>
@@ -202,7 +211,7 @@ export function PlantPotList() {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {plantPots.map((pot) => <PlantPotCard key={pot.id} pot={pot} onDelete={handleDelete} deletingId={deletingId} />)}
     </div>
   );
