@@ -111,8 +111,8 @@ export function usePlantPots() {
           { signal: controller.signal }
         );
 
-        for await (const event of sub) {
-          if (validatePlantPot(event)) {
+        for await (const msg of sub) {
+          if (msg[0] === 'EVENT' && validatePlantPot(msg[2])) {
             queryClient.invalidateQueries({ queryKey: ['plant-pots', user.pubkey] });
           }
         }
@@ -185,9 +185,9 @@ export function usePlantPot(identifier: string | undefined) {
           { signal: controller.signal }
         );
 
-        for await (const event of sub) {
-          if (validatePlantPot(event)) {
-            queryClient.setQueryData(['plant-pot', user.pubkey, identifier], event);
+        for await (const msg of sub) {
+          if (msg[0] === 'EVENT' && validatePlantPot(msg[2])) {
+            queryClient.setQueryData(['plant-pot', user.pubkey, identifier], msg[2]);
           }
         }
       } catch (error) {

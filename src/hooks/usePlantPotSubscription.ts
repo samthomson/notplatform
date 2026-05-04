@@ -22,54 +22,74 @@ export function usePlantPotSubscription() {
     const relay = nostr.relay('wss://relay.samt.st');
 
     // Subscribe to plant pot events (kind 34419) for the current user (by owner p tag)
-    relay.req(
-      [
-        {
-          kinds: [34419],
-          '#p': [user.pubkey], // Subscribe by owner pubkey
-        },
-      ],
-      {
-        signal: controller.signal,
-        onevent(event: NostrEvent) {
-          // Invalidate plant pots query to refetch
-          queryClient.invalidateQueries({ queryKey: ['plant-pots', user.pubkey] });
+    (async () => {
+      try {
+        const sub1 = await relay.req(
+          [
+            {
+              kinds: [34419],
+              '#p': [user.pubkey], // Subscribe by owner pubkey
+            },
+          ],
+          { signal: controller.signal }
+        );
 
-          // Also invalidate specific plant pot query
-          const identifier = event.tags.find(([name]) => name === 'd')?.[1];
-          if (identifier) {
-            queryClient.invalidateQueries({ queryKey: ['plant-pot', user.pubkey, identifier] });
-          }
-        },
-      }
-    );
+        for await (const msg of sub1) {
+          if (msg[0] === 'EVENT') {
+            const event = msg[2];
+            // Invalidate plant pots query to refetch
+            queryClient.invalidateQueries({ queryKey: ['plant-pots', user.pubkey] });
 
-    // Subscribe to plant log events (kind 30001)
-    relay.req(
-      [
-        {
-          kinds: [30001],
-          '#a': [`34419:${user.pubkey}:`], // This will match all logs for user's plant pots
-        },
-      ],
-      {
-        signal: controller.signal,
-        onevent(event: NostrEvent) {
-          // Extract plant pot identifier from the 'a' tag
-          const aTag = event.tags.find(([name]) => name === 'a')?.[1];
-          if (aTag) {
-            const parts = aTag.split(':');
-            if (parts.length === 3) {
-              const plantPotIdentifier = parts[2];
-              // Invalidate logs query for this specific plant pot
-              queryClient.invalidateQueries({
-                queryKey: ['plant-logs', user.pubkey, plantPotIdentifier]
-              });
+            // Also invalidate specific plant pot query
+            const identifier = event.tags.find(([name]) => name === 'd')?.[1];
+            if (identifier) {
+              queryClient.invalidateQueries({ queryKey: ['plant-pot', user.pubkey, identifier] });
             }
           }
-        },
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name !== 'AbortError') {
+          console.error('Subscription error:', error);
+        }
       }
-    );
+    })();
+
+    // Subscribe to plant log events (kind 30001)
+    (async () => {
+      try {
+        const sub2 = await relay.req(
+          [
+            {
+              kinds: [30001],
+              '#a': [`34419:${user.pubkey}:`], // This will match all logs for user's plant pots
+            },
+          ],
+          { signal: controller.signal }
+        );
+
+        for await (const msg of sub2) {
+          if (msg[0] === 'EVENT') {
+            const event = msg[2];
+            // Extract plant pot identifier from the 'a' tag
+            const aTag = event.tags.find(([name]) => name === 'a')?.[1];
+            if (aTag) {
+              const parts = aTag.split(':');
+              if (parts.length === 3) {
+                const plantPotIdentifier = parts[2];
+                // Invalidate logs query for this specific plant pot
+                queryClient.invalidateQueries({
+                  queryKey: ['plant-logs', user.pubkey, plantPotIdentifier]
+                });
+              }
+            }
+          }
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name !== 'AbortError') {
+          console.error('Subscription error:', error);
+        }
+      }
+    })();
 
     // Cleanup subscriptions on unmount
     return () => {

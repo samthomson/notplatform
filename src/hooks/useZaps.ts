@@ -193,9 +193,9 @@ export function useZaps(
       }
 
       // Create zap request - use appropriate event format based on kind
-      // For addressable events (30000-39999), pass the object to get 'a' tag
+      // For addressable events (30000-39999), pass the full event object to get 'a' tag
       // For all other events, pass the ID string to get 'e' tag
-      const event = (actualTarget.kind >= 30000 && actualTarget.kind < 40000)
+      const event: string | NostrEvent = (actualTarget.kind >= 30000 && actualTarget.kind < 40000)
         ? actualTarget
         : actualTarget.id;
 

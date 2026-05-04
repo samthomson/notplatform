@@ -105,7 +105,7 @@ export function CreatePlantPotDialog() {
 
       // Publish to only the custom relay
       const relay = nostr.relay('wss://relay.samt.st');
-      await relay.event(signedEvent, { pow: 0 });
+      await relay.event(signedEvent);
 
       // Invalidate query to refetch immediately
       queryClient.invalidateQueries({ queryKey: ['plant-pots', user.pubkey] });

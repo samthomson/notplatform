@@ -12,6 +12,7 @@ import { useNostr } from '@nostrify/react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useToast } from '@/hooks/useToast';
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 function PlantPotCard({ pot, onDelete, deletingId }: { pot: any; onDelete: (e: React.MouseEvent, pot: any) => void; deletingId: string | null }) {
   const identifier = pot.tags.find(([name]: string[]) => name === 'd')?.[1] || 'unknown';
@@ -153,7 +154,7 @@ export function PlantPotList() {
 
       // Publish deletion
       const relay = nostr.relay('wss://relay.samt.st');
-      await relay.event(signedDeletion, { pow: 0 });
+      await relay.event(signedDeletion);
 
       // Immediately remove from UI
       queryClient.invalidateQueries({ queryKey: ['plant-pots', user.pubkey] });
