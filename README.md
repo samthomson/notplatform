@@ -1,74 +1,88 @@
-# Plantr - IoT Plant Pot Manager
+# NotPlatform - Nostr IoT Device Management
 
-A smart plant pot management application built with Nostr protocol integration for real-time IoT communication. Manage your smart plant pots, schedule watering tasks, and monitor activity logs with live WebSocket updates.
+A decentralized IoT device management platform built on the Nostr protocol. Give your IoT devices their own Nostr identities, manage relay connections, and query events from your devices in real-time.
 
 ## Features
 
-- 🌱 **Plant Pot Management**: Create and organize smart plant pots with unique identifiers
-- 💧 **Task Scheduling**: Add water tasks with custom durations (in seconds)
-- 📊 **Activity Logs**: View real-time logs of completed watering tasks
-- 🔄 **Live Updates**: WebSocket-powered real-time synchronization with IoT devices
-- 🔐 **Nostr Authentication**: Secure login with Nostr keys (NIP-07 browser extension or nsec)
-- 📋 **Easy IoT Setup**: Copy naddr identifiers for IoT device configuration
+- 🤖 **Device Identity Management**: Create Nostr identities for each IoT device
+- 🔐 **Secure Key Storage**: Encrypted private keys for device authentication
+- 📡 **Relay Configuration**: Set custom relay connections for each device
+- 🔄 **Real-time Event Streaming**: Subscribe to and query events from your devices
+- 📊 **Activity Monitoring**: View device logs and event history
+- 🌐 **Decentralized**: Built on Nostr protocol - no central server required
+
+## Why NotPlatform?
+
+Traditional IoT platforms lock you into centralized services with proprietary protocols. NotPlatform leverages the open Nostr protocol to give you:
+
+- **Device Sovereignty**: Each device has its own Nostr keypair
+- **Protocol Freedom**: Use standard Nostr relays and clients
+- **Interoperability**: Devices can communicate with any Nostr-compatible service
+- **Privacy**: Encrypted device credentials you control
+- **No Lock-in**: Your devices, your keys, your relays
 
 ## How It Works
 
-1. **Create Plant Pots**: Add plant pots with unique identifiers (e.g., `plant-pot-1`, `tomato-01`)
-2. **Add Water Tasks**: Schedule watering tasks with duration in seconds
-3. **IoT Integration**: Configure your IoT device with the plant pot's naddr identifier
-4. **Real-time Sync**: Watch as IoT devices complete tasks and update automatically
-5. **View Logs**: Track all watering activities with timestamped logs
+1. **Create Device Identity**: Generate a unique Nostr keypair for your IoT device
+2. **Configure Relays**: Specify which Nostr relays the device should connect to
+3. **Copy Credentials**: Get the device's naddr identifier and private key
+4. **Program Device**: Configure your IoT hardware with the Nostr credentials
+5. **Monitor Events**: Watch real-time events from your device on the Nostr network
+6. **Query History**: View past events and activity logs
 
 ## Event Structure
 
-### Plant Pot (Kind 30000)
-Replaceable event that stores plant pot information and pending tasks. Each plant pot has its own keypair for security - the event is signed by the plant pot's key, not the owner's key.
+### Device Configuration (Kind 34419)
+Replaceable event storing device information and configuration. Each device has its own keypair - events are signed by the device's key, not the owner's key.
 
 ```json
 {
-  "kind": 30000,
-  "pubkey": "<plant-pot-pubkey>",
+  "kind": 34419,
+  "pubkey": "<device-pubkey>",
   "tags": [
-    ["d", "plant-pot-1"],
+    ["d", "sensor-01"],
+    ["name", "Living Room Sensor"],
     ["p", "<owner-pubkey>"],
-    ["task", "water", "30"]
+    ["relay", "wss://relay.example.com"],
+    ["relay", "wss://relay2.example.com"]
   ],
   "content": "<encrypted-hex-private-key>"
 }
 ```
 
-**Important Security Design:**
-- Each plant pot generates its own keypair on creation
-- The plant pot's **private key (hex format)** is encrypted to the owner's pubkey using NIP-44
-- All plant pot updates are signed with the plant pot's key, not the owner's key
-- This allows sharing the plant pot's private key with IoT devices without risking the owner's main identity
+**Security Design:**
+- Each device generates its own keypair on creation
+- The device's **private key (hex format)** is encrypted to the owner's pubkey using NIP-44
+- All device updates are signed with the device's key, not the owner's key
+- This allows sharing the device's private key with IoT hardware without risking the owner's main identity
 - The owner can decrypt and view the hex private key through the UI
 
-### Log (Kind 30001)
-Replaceable event that records completed tasks:
+### Activity Log (Kind 4171)
+Regular event recording device activity:
 
 ```json
 {
-  "kind": 30001,
+  "kind": 4171,
+  "pubkey": "<device-pubkey>",
   "tags": [
-    ["a", "30000:<pubkey>:plant-pot-1"],
-    ["task", "water", "30"]
+    ["a", "34419:<device-pubkey>:<d-tag>"],
+    ["event_type", "sensor_reading"],
+    ["data", "temperature", "22.5"]
   ],
   "content": ""
 }
 ```
 
-## IoT Device Setup
+## Device Setup
 
-1. **Get Plant Pot ID**: Copy the naddr identifier from the plant pot detail page
-2. **Get Private Key**: Click "Decrypt" to reveal the plant pot's private key (64-character hex string), then copy it
-3. **Configure Relay**: Connect to `wss://relay.samt.st`
-4. **Watch for Updates**: Subscribe to plant pot events using the naddr identifier
-5. **Sign with Plant Pot Key**: Use the decrypted hex private key to sign all events as the plant pot identity
-6. **Complete Tasks**: When a task is completed, publish a log event (kind 30001)
-7. **Update Plant Pot**: Remove completed tasks from the plant pot event and sign with the plant pot's key
+1. **Get Device ID**: Copy the naddr identifier from the device detail page
+2. **Get Private Key**: Click "Decrypt" to reveal the device's private key (64-character hex string)
+3. **Configure Relays**: Set the relay URLs for your device to connect to
+4. **Program Hardware**: Use the credentials in your IoT device firmware
+5. **Publish Events**: Device publishes events using its Nostr identity
+6. **Monitor**: View real-time events in the NotPlatform dashboard
 
-**Security Note**: The plant pot's private key is separate from your main Nostr identity, so sharing it with IoT devices doesn't compromise your main account.
+**Security Note**: The device's private key is separate from your main Nostr identity, so sharing it with IoT hardware doesn't compromise your personal account.
 
 ## Technology Stack
 
@@ -94,36 +108,43 @@ npm run test
 
 ## Relay Configuration
 
-The app uses a single relay for optimal performance:
+The app connects to Nostr relays for device communication:
 - **Default Relay**: `wss://relay.samt.st`
 
-You can manage relay connections through the app's relay settings interface.
+You can configure custom relay lists for each device through the device management interface.
 
 ## Real-time Updates
 
 The app maintains active WebSocket connections to relays and automatically:
-- Updates plant pot lists when new pots are created
-- Refreshes task lists when tasks are added
-- Shows new logs as IoT devices complete tasks
-- Removes completed tasks from the pending list
+- Updates device lists when new devices are created
+- Refreshes event streams when devices publish
+- Shows new activity logs in real-time
+- Syncs configuration changes across all connected clients
 
 ## Architecture
 
 ### Hooks
-- `usePlantPots`: Fetch all plant pots for current user
-- `usePlantPot`: Fetch a single plant pot by identifier
-- `usePlantLogs`: Fetch activity logs for a plant pot
-- `usePlantPotSubscription`: Subscribe to real-time updates via WebSocket
+- `usePlantPots`: Fetch all devices for current user (to be renamed)
+- `usePlantPot`: Fetch a single device by identifier (to be renamed)
+- `usePlantLogs`: Fetch activity logs for a device (to be renamed)
+- `usePlantPotSubscription`: Subscribe to real-time updates via WebSocket (to be renamed)
 
 ### Components
-- `PlantPotList`: Grid view of all plant pots
-- `PlantPotDetail`: Detailed view with tasks and logs
-- `CreatePlantPotDialog`: Form to create new plant pots
-- `AddWaterTaskDialog`: Form to add water tasks
-- `ConnectionStatus`: Live connection indicator
+- Device list view: Grid view of all devices
+- Device detail view: Configuration, logs, and event history
+- Create device dialog: Form to create new device identities
+- Connection status: Live relay connection indicator
 
 ### Utilities
-- `plantUtils.ts`: Helper functions for formatting and naddr generation
+- Helper functions for formatting and naddr generation
+
+## Use Cases
+
+- **Sensor Networks**: Temperature, humidity, motion sensors
+- **Smart Home Devices**: Lights, switches, controllers
+- **Industrial IoT**: Equipment monitoring and automation
+- **Environmental Monitoring**: Weather stations, air quality sensors
+- **Custom Projects**: Any IoT device that can publish Nostr events
 
 ## License
 
