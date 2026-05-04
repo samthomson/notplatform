@@ -35,13 +35,20 @@ const Index = () => {
 
           {/* Subtitle */}
           <p className="text-[21px] leading-[1.381] font-normal text-center mb-2 text-[#1d1d1f] dark:text-[#f5f5f7]">
-            Decentralized IoT device management
+            Nostr of Things
           </p>
 
           {/* Description */}
-          <p className="text-[17px] leading-[1.47] font-normal text-center mb-10 text-[#86868b] dark:text-[#a1a1a6] max-w-lg mx-auto">
-            Built on Nostr protocol. Give your devices their own identities, manage relays, and query events in real-time.
+          <p className="text-[17px] leading-[1.47] font-normal text-center mb-6 text-[#86868b] dark:text-[#a1a1a6] max-w-lg mx-auto">
+            Use Nostr as your IoT backend. You control the data, you own the relays, you manage the identities.
           </p>
+
+          {/* Key points */}
+          <div className="text-[15px] leading-[1.47] text-center mb-10 text-[#86868b] dark:text-[#a1a1a6] max-w-md mx-auto space-y-1">
+            <p>• No external platform owns your device data</p>
+            <p>• Each device gets its own Nostr identity</p>
+            <p>• Real-time events over open protocol</p>
+          </div>
 
           {/* Login Area */}
           <div className="flex justify-center">
