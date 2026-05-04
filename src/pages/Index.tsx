@@ -1,8 +1,8 @@
 import { useSeoMeta } from '@unhead/react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { usePlantPotSubscription } from '@/hooks/usePlantPotSubscription';
-import { PlantPotList } from '@/components/PlantPotList';
-import { CreatePlantPotDialog } from '@/components/CreatePlantPotDialog';
+import { DeviceList } from '@/components/DeviceList';
+import { CreateDeviceDialog } from '@/components/CreateDeviceDialog';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { Cpu } from 'lucide-react';
 
@@ -74,7 +74,7 @@ const Index = () => {
               </h1>
             </div>
             <div className="flex items-center gap-3">
-              <CreatePlantPotDialog />
+              <CreateDeviceDialog />
               <LoginArea className="max-w-xs" />
             </div>
           </div>
@@ -92,7 +92,7 @@ const Index = () => {
           </p>
         </div>
 
-        <PlantPotList />
+        <DeviceList />
       </div>
     </div>
   );
