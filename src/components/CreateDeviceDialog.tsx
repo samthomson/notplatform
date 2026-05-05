@@ -16,7 +16,6 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/useToast';
 import { Plus } from 'lucide-react';
 import { generateSecretKey } from 'nostr-tools';
-import { nip19 } from 'nostr-tools';
 import { NSecSigner } from '@nostrify/nostrify';
 import { useQueryClient } from '@tanstack/react-query';
 

@@ -23,7 +23,6 @@ function validatePlantLog(event: NostrEvent): boolean {
  */
 export function usePlantLogs(plantPotPubkey: string | undefined, plantPotIdentifier: string | undefined) {
   const { nostr } = useNostr();
-  const { user } = useCurrentUser();
 
   return useQuery({
     queryKey: ['plant-logs', plantPotPubkey, plantPotIdentifier],

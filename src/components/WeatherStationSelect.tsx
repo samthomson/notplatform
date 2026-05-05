@@ -1,15 +1,13 @@
 import { useWeatherStations, useWeatherReadings, getTemperature, getHumidity } from '@/hooks/useWeatherStations';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Card } from '@/components/ui/card';
 import { Thermometer, Droplets, MapPin } from 'lucide-react';
+import type { NostrEvent } from '@nostrify/nostrify';
 
 interface WeatherStationSelectProps {
-  value: string | undefined;
+  value?: string;
   onChange: (pubkey: string) => void;
 }
 
-function WeatherStationOption({ station }: { station: any }) {
+function WeatherStationOption({ station }: { station: NostrEvent }) {
   const { data: reading } = useWeatherReadings(station.pubkey);
   const name = station.tags.find(([t]: string[]) => t === 'name')?.[1] || 'Unknown Station';
   const description = station.tags.find(([t]: string[]) => t === 'description')?.[1];

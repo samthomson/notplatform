@@ -10,8 +10,9 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useToast } from '@/hooks/useToast';
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import type { NostrEvent } from '@nostrify/nostrify';
 
-function DeviceCard({ device, onDelete, deletingId }: { device: any; onDelete: (e: React.MouseEvent, device: any) => void; deletingId: string | null }) {
+function DeviceCard({ device, onDelete, deletingId }: { device: NostrEvent; onDelete: (e: React.MouseEvent, device: NostrEvent) => void; deletingId: string | null }) {
   const identifier = device.tags.find(([name]: string[]) => name === 'd')?.[1] || 'unknown';
   const name = device.tags.find(([name]: string[]) => name === 'name')?.[1] || identifier;
   const { data: logs } = usePlantLogs(device.pubkey, identifier);
@@ -84,7 +85,7 @@ export function DeviceList() {
   const queryClient = useQueryClient();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const handleDelete = async (e: React.MouseEvent, device: any) => {
+  const handleDelete = async (e: React.MouseEvent, device: NostrEvent) => {
     e.preventDefault();
     e.stopPropagation();
 

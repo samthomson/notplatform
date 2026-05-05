@@ -2,7 +2,7 @@ import { useNostr } from '@nostrify/react';
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCurrentUser } from './useCurrentUser';
-import type { NostrEvent } from '@nostrify/nostrify';
+
 
 /**
  * Hook to subscribe to real-time updates for plant pots and logs
