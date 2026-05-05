@@ -93,7 +93,7 @@ export function DeviceDetail() {
   };
 
   const handleDecryptKey = async () => {
-    if (!device || !user?.signer) return;
+    if (!device || !user?.signer || !user.signer.nip44) return;
 
     setIsDecrypting(true);
     try {
@@ -139,7 +139,7 @@ export function DeviceDetail() {
   };
 
   const handleSaveName = async () => {
-    if (!device || !user?.signer || !editedName.trim()) return;
+    if (!device || !user?.signer || !user.signer.nip44 || !editedName.trim()) return;
 
     try {
       const decryptedKey = await user.signer.nip44.decrypt(user.pubkey, device.content);
@@ -322,7 +322,7 @@ export function DeviceDetail() {
                         size="sm"
                         variant="ghost"
                         onClick={() => {
-                          setEditedName(name);
+                          setEditedName(name || '');
                           setIsEditingName(true);
                         }}
                         className="h-7 w-7 p-0"
